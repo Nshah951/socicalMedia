@@ -3,9 +3,22 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './user/user.controller';
 import { PostController } from './post/post.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from './user/user.entity';
 
 @Module({
-  imports: [],
+  imports: [
+    TypeOrmModule.forRoot({
+      type:'postgres',
+      username:'nishant',
+      password:'postgres',
+      database:'socialmedia',
+      synchronize: true,
+      logger:'advanced-console',
+      logging:'all',
+      entities:[ UserEntity ]
+    })
+  ],
   controllers: [AppController, UserController, PostController],
   providers: [AppService],
 })
