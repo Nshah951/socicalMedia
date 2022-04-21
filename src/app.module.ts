@@ -5,6 +5,7 @@ import { UserController } from './user/user.controller';
 import { PostController } from './post/post.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './user/user.entity';
+import { PostEntity } from './post/post.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { UserEntity } from './user/user.entity';
       synchronize: true,
       logger:'advanced-console',
       logging:'all',
-      entities:[ UserEntity ]
+      entities:[ UserEntity, PostEntity ]
     })
   ],
   controllers: [AppController, UserController, PostController],

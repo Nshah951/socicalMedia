@@ -1,11 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, BeforeInsert } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { mediaBaseEntity } from 'src/common/base.entity';
 
 @Entity('USER')
-export class UserEntity{
-
-    @PrimaryGeneratedColumn('uuid')
-    id:number
+export class UserEntity extends mediaBaseEntity{
 
     @Column({nullable:false})
     username: string
