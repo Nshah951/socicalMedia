@@ -8,7 +8,6 @@ export class UserController {
     }
     @Get(':userID')
     getbyUserID(@Param('userID') userID: string){
-        console.log(userID);
         return `Get user by ID ${userID}`
     }
     @Post('/')
