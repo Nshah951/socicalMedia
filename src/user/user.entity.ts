@@ -2,7 +2,7 @@ import { Entity, Column, BeforeInsert } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { mediaBaseEntity } from 'src/common/base.entity';
 
-@Entity('USER')
+@Entity('users')
 export class UserEntity extends mediaBaseEntity{
 
     @Column({nullable:false})
