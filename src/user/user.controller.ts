@@ -11,6 +11,12 @@ export class UserCreateBody{
     @ApiPropertyOptional() number: number
 }
 
+export class UserUpdateBody{
+    @ApiPropertyOptional() password: string;
+    @ApiPropertyOptional() email: string;
+    @ApiPropertyOptional() number: number
+}
+
 @ApiTags('user')
 @Controller('user')
 export class UserController {
@@ -40,9 +46,13 @@ export class UserController {
         return user
     }
     @Patch('/:userID')
-    updateUser(@Param('userID') userID: string,@Body() updatedata:string){
-        return `Update at ${userID} of ${updatedata}`
-    }
+    async updateUser(
+        @Param('userID') userID: string,
+        @Body() updatedata:UserUpdateBody):Promise<UserEntity>
+        {
+            const user = await this.userService.updateUser(userID , updatedata)
+            return user
+        }
     @Put('/:userID/follow')
     followUser(@Param('userID') userID: string){
         return `Follow user ${userID}`

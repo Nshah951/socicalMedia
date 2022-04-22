@@ -8,6 +8,7 @@ import { UserEntity } from './user/user.entity';
 import { PostEntity } from './post/post.entity';
 import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -21,9 +22,10 @@ import { UserModule } from './user/user.module';
       logging:'all',
       entities:[ UserEntity, PostEntity ]
     }),
-    UserModule
+    UserModule,
+    PostModule
   ],
-  controllers: [AppController, PostController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
