@@ -1,20 +1,43 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Put } from '@nestjs/common';
+import { ApiBody, ApiProperty, ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
+import { UserEntity } from './user.entity';
+import { UserService } from './user.service';
+
+export class UserCreateBody{
+    @ApiProperty() username: string;
+    @ApiProperty() name: string;
+    @ApiProperty() password: string;
+    @ApiProperty() email: string;
+    @ApiPropertyOptional() number: number
+}
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
+    constructor(private userService: UserService){}
+
     @Get('/@:username')
-    getByUsername(@Param('username') username : string):string{
-        return `Get user by username ${username}`
+    async getByUsername(@Param('username') username : string):Promise<any>{
+        const user = await this.userService.getUserbyName(username)
+    
+        if(!user){
+            throw new NotFoundException('User Not Found')
+        }
+        return user;
     }
-    @Get(':userID')
-    getbyUserID(@Param('userID') userID: string){
-        return `Get user by ID ${userID}`
+    @Get('/:userID')
+    async getbyUserID(@Param('userID') userID: string):Promise<UserEntity>{
+        const user = await this.userService.getUserbyID(userID)
+        if(!user){
+            throw new NotFoundException('User Not Found')
+        }
+        return user
     }
+    
     @Post('/')
-    createNewUser(@Body() user: string){
-        return `username created ${user}`
+    async createNewUser(@Body() userBody: UserCreateBody):Promise<UserEntity>{
+        const user = await this.userService.createUser(userBody)
+        return user
     }
     @Patch('/:userID')
     updateUser(@Param('userID') userID: string,@Body() updatedata:string){
