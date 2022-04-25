@@ -1,6 +1,8 @@
-import { Entity, Column, BeforeInsert } from 'typeorm';
+import { Entity, Column, BeforeInsert, OneToOne, BeforeUpdate } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { mediaBaseEntity } from 'src/common/base.entity';
+import { PasswordEntity } from 'src/auth/passwords.entity';
+import { InternalServerErrorException } from '@nestjs/common';
 
 @Entity('users')
 export class UserEntity extends mediaBaseEntity{
@@ -17,17 +19,16 @@ export class UserEntity extends mediaBaseEntity{
     @Column()
     number: number
 
-    @Column()
-    password : string
-    
-    @BeforeInsert()
-    async hashPassword() {
-		this.password = await bcrypt.hash(this.password, 10);
-	}
-    // @Column('string', { name: 'follower_count', default: 0 })
-    // followerCount: number;
+    @Column( { name: 'follower_count', default: 0 })
+    followerCount: number;
 
-    // @Column ('string', { name: 'followee_count', default: 0 })
-    // followeeCount: number;
+    @Column ( { name: 'followee_count', default: 0 })
+    followeeCount: number;
     
+    @OneToOne((type)=> PasswordEntity,(password)=>password.user,{
+        lazy: true,
+        cascade:true
+    })
+    userpassword: PasswordEntity
+
 }

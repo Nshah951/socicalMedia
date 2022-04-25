@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Put } from '@nestjs/common';
-import { ApiBody, ApiProperty, ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
@@ -41,8 +41,9 @@ export class UserController {
     }
     
     @Post('/')
-    async createNewUser(@Body() userBody: UserCreateBody):Promise<UserEntity>{
-        const user = await this.userService.createUser(userBody)
+    async createNewUser(@Body() userBody: UserCreateBody,password):Promise<UserEntity>{
+        password = userBody.password
+        const user = await this.userService.createUser(userBody,password)
         return user
     }
     @Patch('/:userID')

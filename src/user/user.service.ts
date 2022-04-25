@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotFoundError } from 'rxjs';
+import { PasswordEntity } from 'src/auth/passwords.entity';
+import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { UserRepo } from './user.repository';
 
 @Injectable()
 export class UserService {
     
-    constructor(private userReop: UserRepo){}
+    constructor(private userReop: UserRepo,
+        @InjectRepository(PasswordEntity)
+        private passwordRepo: Repository<PasswordEntity>){}
 
     /**
      * @description find users by Name
@@ -30,8 +34,16 @@ export class UserService {
      * @description Create New User
      * @returns {Promise<UserEntity>} if user created
      */
-    public async createUser(user: Partial<UserEntity>):Promise<UserEntity>{
-        return await this.userReop.save(user)
+    public async createUser(user: Partial<UserEntity>,password:string):Promise<UserEntity>{
+        user.userpassword = new PasswordEntity();
+        user.userpassword.password = password;
+        const newUser = await this.userReop.save(user);
+        const UserPassword = new PasswordEntity()
+        UserPassword.user = newUser;
+        UserPassword.password = password;
+        await this.passwordRepo.save(UserPassword)
+        
+        return newUser
     }
 
     /**
@@ -43,7 +55,6 @@ export class UserService {
         if(!ifuser){
             return null            
         }
-        if(newUser.password) ifuser.password = newUser.password;
         if(newUser.email) ifuser.email = newUser.email;
         if(newUser.number) ifuser.number = newUser.number;
         return await this.userReop.save(ifuser)

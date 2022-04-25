@@ -9,6 +9,8 @@ import { PostEntity } from './post/post.entity';
 import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
+import { AuthModule } from './auth/auth.module';
+import { PasswordEntity } from './auth/passwords.entity';
 
 @Module({
   imports: [
@@ -20,10 +22,11 @@ import { PostModule } from './post/post.module';
       synchronize: true,
       logger:'advanced-console',
       logging:'all',
-      entities:[ UserEntity, PostEntity ]
+      entities:[ UserEntity, PostEntity, PasswordEntity]
     }),
     UserModule,
-    PostModule
+    PostModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
